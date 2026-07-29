@@ -857,12 +857,19 @@ char *mz80cmt_loadfilename(void)
   return name;
 }
 
+#ifdef __APPLE__
+/* Mach-O prefixes C symbols with an underscore */
+#define ASMSYM(name) "_" name
+#else
+#define ASMSYM(name) name
+#endif
+
 __asm__ (
-  ".global mz_newmon\n"
-  "mz_newmon:\n"
+  ".global " ASMSYM("mz_newmon") "\n"
+  ASMSYM("mz_newmon") ":\n"
   ".incbin \"mz_newmon/NEWMON.ROM\"\n"
-  ".global mz_newmon7\n"
-  "mz_newmon7:\n"
+  ".global " ASMSYM("mz_newmon7") "\n"
+  ASMSYM("mz_newmon7") ":\n"
   ".incbin \"mz_newmon/NEWMON7.ROM\""
 );
 
